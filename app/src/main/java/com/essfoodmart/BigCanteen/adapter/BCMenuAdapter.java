@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ public class BCMenuAdapter extends RecyclerView.Adapter<BCMenuAdapter.Viewholder
         BCMenuModel model = menuItems.get(position);
         holder.txtFoodName.setText(model.getFoodName());
         holder.txtFoodPrice.setText(model.getFoodPrice());
+        holder.imgFood.setImageResource(model.getFoodImage());
 
     }
 
@@ -56,6 +58,7 @@ public class BCMenuAdapter extends RecyclerView.Adapter<BCMenuAdapter.Viewholder
         TextView txtFoodName;
         TextView txtFoodPrice;
         CardView cardItem;
+        ImageView imgFood;
 
         onClickItemListener onClickItemListener;
 
@@ -64,6 +67,7 @@ public class BCMenuAdapter extends RecyclerView.Adapter<BCMenuAdapter.Viewholder
             txtFoodName = itemView.findViewById(R.id.txtFoodName);
             txtFoodPrice = itemView.findViewById(R.id.txtFoodPrice);
             cardItem = itemView.findViewById(R.id.cardItem);
+            imgFood = itemView.findViewById(R.id.imgFood);
 
             itemView.setOnClickListener(this);
             this.onClickItemListener = onClickItemListener;
