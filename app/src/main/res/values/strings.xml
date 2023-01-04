@@ -3,4 +3,21 @@
     <string name="search">Search</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="item1">PINAKBET|P85</string>
+    <string name="item2">PORK BBQ|P95</string>
+    <string name="item3">SPAGHETTI|P65</string>
+    <string name="item4">BEEF TAPA|P85</string>
+    <string name="item5">FRIED CHICKEN|P80</string>
+    <string name="item6">PORK|P85</string>
+
+    <string-array name="big_canteen_menu">
+        <item>@string/item1</item>
+        <item>@string/item2</item>
+        <item>@string/item3</item>
+        <item>@string/item4</item>
+        <item>@string/item5</item>
+        <item>@string/item6</item>
+    </string-array>
+
 </resources>

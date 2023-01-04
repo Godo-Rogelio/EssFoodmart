@@ -5,26 +5,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.essfoodmart.BigCanteen.adapter.BCMenuAdapter;
-import com.essfoodmart.BigCanteen.model.BCMenuModel;
+import com.essfoodmart.Model.MenuModel;
+import com.essfoodmart.Model.OrderModel;
 import com.essfoodmart.R;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class BigCanteenActivity extends AppCompatActivity implements BCMenuAdapter.onClickItemListener {
 
     RecyclerView bcRecyclerMenu;
     BCMenuAdapter adapter;
 
-    ArrayList<BCMenuModel> menuItems;
-    
+    ArrayList<MenuModel> menuItems;
+    ArrayList<OrderModel> orderedItem;
+    int orderNumber = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,13 +45,14 @@ public class BigCanteenActivity extends AppCompatActivity implements BCMenuAdapt
     {
         bcRecyclerMenu = findViewById(R.id.bcRecyclerMenu);
 
-        menuItems = new ArrayList<BCMenuModel>();
-        menuItems.add(new BCMenuModel("PINAKBET", "P85", R.drawable.pinakbet));
-        menuItems.add(new BCMenuModel("PORK BBQ", "P95", R.drawable.pork_bbq));
-        menuItems.add(new BCMenuModel("SPAGHETTI", "65", R.drawable.spaghetti));
-        menuItems.add(new BCMenuModel("BEEF TAPA", "P85", R.drawable.beef_tapa));
-        menuItems.add(new BCMenuModel("FRIED CHICKEN", "P80", R.drawable.fried_chicken));
-        menuItems.add(new BCMenuModel("PORK", "P85", R.drawable.pork));
+        menuItems = new ArrayList<MenuModel>();
+
+        menuItems.add(new MenuModel("PINAKBET", "P85", R.drawable.pinakbet));
+        menuItems.add(new MenuModel("PORK BBQ", "P95", R.drawable.pork_bbq));
+        menuItems.add(new MenuModel("SPAGHETTI", "P65", R.drawable.spaghetti));
+        menuItems.add(new MenuModel("BEEF TAPA", "P85", R.drawable.beef_tapa));
+        menuItems.add(new MenuModel("FRIED CHICKEN", "P80", R.drawable.fried_chicken));
+        menuItems.add(new MenuModel("PORK", "P85", R.drawable.pork));
 
         adapter = new BCMenuAdapter(BigCanteenActivity.this,    menuItems, this);
         bcRecyclerMenu.setLayoutManager(new GridLayoutManager(this, 2));
@@ -72,16 +81,16 @@ public class BigCanteenActivity extends AppCompatActivity implements BCMenuAdapt
         txtPrice.setText(foodPrice);
         imageView.setImageResource(foodImage);
 
-        final int[] orderNumber = {Integer.parseInt(txtOrderNumber.getText().toString())};
+        orderNumber = Integer.parseInt(txtOrderNumber.getText().toString());
         //Events
         imgMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
-                if(orderNumber[0] != 1)
+                if(orderNumber != 1)
                 {
-                    orderNumber[0] = orderNumber[0] - 1;
-                    txtOrderNumber.setText(String.valueOf(orderNumber[0]));
+                    orderNumber = orderNumber - 1;
+                    txtOrderNumber.setText(String.valueOf(orderNumber));
                 }
             }
         });
@@ -89,8 +98,8 @@ public class BigCanteenActivity extends AppCompatActivity implements BCMenuAdapt
             @Override
             public void onClick(View view)
             {
-                orderNumber[0] = orderNumber[0] + 1;
-                txtOrderNumber.setText(String.valueOf(orderNumber[0]));
+                orderNumber = orderNumber + 1;
+                txtOrderNumber.setText(String.valueOf(orderNumber));
             }
         });
 
@@ -99,7 +108,43 @@ public class BigCanteenActivity extends AppCompatActivity implements BCMenuAdapt
         AlertDialog alertDialog = builder.create();
         btnAddOrder.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
+                SharedPreferences sharedPreferences = getSharedPreferences("my_cart", MODE_PRIVATE);
+
+                String data = sharedPreferences.getString("cart_item", null);
+                Gson gson = new Gson();
+
+                OrderModel[] _orderItems = gson.fromJson(data, OrderModel[].class);
+
+                orderedItem = new ArrayList<OrderModel>();
+                if((_orderItems != null))
+                    Collections.addAll(orderedItem, _orderItems);
+
+                /*if((_orderItems != null))
+                {
+                    for(int a = 0; a < _orderItems.length; a++)
+                    {
+                        orderedItem.add(new OrderModel(_orderItems[a].getFoodName(),
+                                _orderItems[a].getFoodPrice(),
+                                _orderItems[a].getFoodImage(),
+                                orderNumber));
+                    }
+                }*/
+
+                orderedItem.add(new OrderModel(menuItems.get(position).getFoodName(),
+                        menuItems.get(position).getFoodPrice(),
+                        menuItems.get(position).getFoodImage(),
+                        orderNumber));
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove("cart_item").apply();
+                String json = gson.toJson(orderedItem);
+
+                editor.putString("cart_item", json);
+                editor.apply();
+
+                Toast.makeText(BigCanteenActivity.this, "Added " + menuItems.get(position).getFoodName() + orderNumber + " to Cart", Toast.LENGTH_SHORT).show();
                 alertDialog.dismiss();
             }
         });

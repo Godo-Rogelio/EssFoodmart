@@ -11,19 +11,19 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.essfoodmart.BigCanteen.model.BCMenuModel;
+import com.essfoodmart.Model.MenuModel;
 import com.essfoodmart.R;
 
 import java.util.ArrayList;
 
 public class BCMenuAdapter extends RecyclerView.Adapter<BCMenuAdapter.Viewholder>{
 
-    ArrayList<BCMenuModel> menuItems;
+    ArrayList<MenuModel> menuItems;
     final Context context;
 
     private onClickItemListener onClickItemListener;
 
-    public BCMenuAdapter(Context context, ArrayList<BCMenuModel> menuItems, onClickItemListener onClickItemListener)
+    public BCMenuAdapter(Context context, ArrayList<MenuModel> menuItems, onClickItemListener onClickItemListener)
     {
         this.context = context;
         this.menuItems = menuItems;
@@ -40,7 +40,7 @@ public class BCMenuAdapter extends RecyclerView.Adapter<BCMenuAdapter.Viewholder
 
     @Override
     public void onBindViewHolder(@NonNull BCMenuAdapter.Viewholder holder, int position) {
-        BCMenuModel model = menuItems.get(position);
+        MenuModel model = menuItems.get(position);
         holder.txtFoodName.setText(model.getFoodName());
         holder.txtFoodPrice.setText(model.getFoodPrice());
         holder.imgFood.setImageResource(model.getFoodImage());

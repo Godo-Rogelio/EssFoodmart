@@ -3,14 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/drawable/ic_cart.xml" value="0.1235" />
+        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1235" />
         <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/drawable/toolbar_bg.xml" value="0.1955" />
+        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/activity_beverages.xml" value="0.27291666666666664" />
         <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/activity_big_canteen.xml" value="0.2973300970873786" />
-        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/activity_dashboard.xml" value="0.25" />
+        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/activity_dashboard.xml" value="0.22" />
         <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/activity_main.xml" value="0.1956521739130435" />
+        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/activity_my_cart.xml" value="0.14270833333333333" />
+        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/activity_small_canteen.xml" value="0.27291666666666664" />
         <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/big_canteen_card_menu.xml" value="0.2973300970873786" />
+        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/card_cart_items.xml" value="0.21" />
         <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/fragment_take_order.xml" value="0.25" />
         <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/order_dialog.xml" value="0.25" />
-        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/take_order_dialog.xml" value="0.33" />
+        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/popup_payment.xml" value="0.21" />
+        <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/take_order_dialog.xml" value="0.25" />
         <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/take_order_fragment.xml" value="0.140625" />
         <entry key="..\:/+Dev/Mobile Dev/EssFoodmart/app/src/main/res/layout/toolbar.xml" value="0.22192028985507245" />
       </map>
