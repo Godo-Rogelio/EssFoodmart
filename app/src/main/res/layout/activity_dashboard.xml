@@ -96,7 +96,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            tools:ignore="KeyboardInaccessibleWidget" />
+            tools:ignore="KeyboardInaccessibleWidget"
+            android:visibility="gone"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

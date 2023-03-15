@@ -16,15 +16,16 @@ import com.essfoodmart.Model.OrderModel;
 import com.essfoodmart.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.Viewholder>
 {
-    OrderModel[] orderItems;
+    List<OrderModel> orderItems;
     final Context context;
 
     private onClickItemListener onClickItemListener;
 
-    public MyCartAdapter(Context context, OrderModel[] orderItems, onClickItemListener onClickItemListener)
+    public MyCartAdapter(Context context, List<OrderModel> orderItems, onClickItemListener onClickItemListener)
     {
         this.context = context;
         this.orderItems = orderItems;
@@ -40,7 +41,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.Viewholder
 
     @Override
     public void onBindViewHolder(@NonNull MyCartAdapter.Viewholder holder, int position) {
-        OrderModel model = orderItems[position];
+        OrderModel model = orderItems.get(position);
         holder.txtFoodName.setText(model.getFoodName());
         holder.txtFoodPrice.setText(model.getFoodPrice());
         holder.txtQuantity.setText("x" + String.valueOf(model.getQuantity()));
@@ -53,7 +54,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.Viewholder
 
     @Override
     public int getItemCount() {
-        return orderItems.length;
+        return orderItems.size();
     }
 
     public static class Viewholder extends RecyclerView.ViewHolder implements View.OnClickListener
@@ -85,7 +86,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.Viewholder
         }
     }
 
-    public void updateData(OrderModel[] orderItems)
+    public void updateData(List<OrderModel> orderItems)
     {
         this.orderItems = orderItems;
         notifyDataSetChanged();

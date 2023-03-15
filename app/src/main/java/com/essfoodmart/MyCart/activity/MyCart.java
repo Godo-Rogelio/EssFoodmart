@@ -2,6 +2,7 @@ package com.essfoodmart.MyCart.activity;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,17 +16,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.essfoodmart.Database.DBHelper;
 import com.essfoodmart.Model.OrderModel;
 import com.essfoodmart.MyCart.adapter.MyCartAdapter;
+import com.essfoodmart.MyCart.adapter.OrderSummaryAdapter;
 import com.essfoodmart.R;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 public class MyCart extends AppCompatActivity implements MyCartAdapter.onClickItemListener{
 
     RecyclerView bcRecyclerMenu;
     Button btnPayment;
     MyCartAdapter adapter;
-    OrderModel[] orderItems;
+    List<OrderModel> orderItems;
 
     SharedPreferences sharedPreferences;
     Gson gson;
@@ -46,13 +51,7 @@ public class MyCart extends AppCompatActivity implements MyCartAdapter.onClickIt
         bcRecyclerMenu = findViewById(R.id.bcRecyclerMenu);
         btnPayment = findViewById(R.id.btnPayment);
 
-        sharedPreferences = getSharedPreferences("my_cart", MODE_PRIVATE);
-        gson = new Gson();
-        String json = sharedPreferences.getString("cart_item", null);
-        orderItems = gson.fromJson(json, OrderModel[].class);
-
-        if(orderItems == null)
-            orderItems = new OrderModel[0];
+        orderItems = DBHelper.getCartItems();
 
         adapter = new MyCartAdapter(MyCart.this, orderItems, this);
         bcRecyclerMenu.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
@@ -70,26 +69,39 @@ public class MyCart extends AppCompatActivity implements MyCartAdapter.onClickIt
     private void paymentFunction()
     {
         totalAmount = 0;
-        for(int a = 0; a < orderItems.length; a++)
+        for(int a = 0; a < orderItems.size(); a++)
         {
-            String itemPriceFirstCharRemoved = orderItems[a].getFoodPrice().substring(1);
+            String itemPriceFirstCharRemoved = orderItems.get(a).getFoodPrice().substring(1);
             int itemPrice = Integer.parseInt(itemPriceFirstCharRemoved);
-            int itemQty = orderItems[a].getQuantity();
+            int itemQty = orderItems.get(a).getQuantity();
             totalAmount += itemPrice * itemQty;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_NoActionBar_Fullscreen);
+        //int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+        //int height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_NoTitleBar_Fullscreen);
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.popup_payment, null);
 
-        TextView txtTotalAmount  = dialogView.findViewById(R.id.txtTotalAmount);
+        TextView txtOrderTotal  = dialogView.findViewById(R.id.txtOrderTotal);
         Button btnPay  = dialogView.findViewById(R.id.btnPay);
+        RecyclerView recyclerOrders  = dialogView.findViewById(R.id.recyclerOrders);
 
-        txtTotalAmount.setText(String.valueOf(totalAmount));
+        txtOrderTotal.setText(String.valueOf(totalAmount));
+
+        OrderSummaryAdapter adapter = new OrderSummaryAdapter(MyCart.this, orderItems);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false);
+        recyclerOrders.setLayoutManager(layoutManager);
+        recyclerOrders.addItemDecoration(new DividerItemDecoration(MyCart.this, LinearLayoutManager.VERTICAL));
+        recyclerOrders.setAdapter(adapter);
+
 
         builder.setView(dialogView);
-        AlertDialog alertDialog = builder.create();
 
+        AlertDialog alertDialog = builder.create();
+        //alertDialog.getWindow().setLayout(width, height);
 
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,58 +122,15 @@ public class MyCart extends AppCompatActivity implements MyCartAdapter.onClickIt
         alertDialog.show();
     }
 
-    public static OrderModel[] removeTheElement(OrderModel[] arr, int index)
-    {
-
-        // If the array is empty
-        // or the index is not in array range
-        // return the original array
-        if (arr == null
-                || index < 0
-                || index >= arr.length) {
-
-            return arr;
-        }
-
-        // Create another array of size one less
-        OrderModel[] anotherArray = new OrderModel[arr.length - 1];
-
-        // Copy the elements from starting till index
-        // from original array to the other array
-        System.arraycopy(arr, 0, anotherArray, 0, index);
-
-        // Copy the elements from index + 1 till end
-        // from original array to the other array
-        System.arraycopy(arr, index + 1,
-                anotherArray, index,
-                arr.length - index - 1);
-
-        // return the resultant array
-        return anotherArray;
-    }
-
-    void refreshPreference(OrderModel[] orderedItem, int position)
-    {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        String json = gson.toJson(orderedItem);
-
-        editor.putString("cart_item", json);
-        editor.apply();
-
-    }
-
     @Override
     public void onClickItem(int position)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Message");
-        builder.setMessage("Do you want to remove " + orderItems[position].getFoodName() +" " + orderItems[position].getQuantity());
+        builder.setMessage("Do you want to remove " + orderItems.get(position).getFoodName() +" " + orderItems.get(position).getQuantity());
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
-                orderItems = removeTheElement(orderItems, position);
-                refreshPreference(orderItems, position);
 
                 adapter.updateData(orderItems);
             }

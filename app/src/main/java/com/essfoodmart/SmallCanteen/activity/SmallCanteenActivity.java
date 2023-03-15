@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.essfoodmart.BigCanteen.activity.BigCanteenActivity;
+import com.essfoodmart.Database.DBHelper;
 import com.essfoodmart.Model.MenuModel;
 import com.essfoodmart.Model.OrderModel;
 import com.essfoodmart.R;
@@ -33,6 +34,8 @@ public class SmallCanteenActivity extends AppCompatActivity implements SMMenuAda
     ArrayList<MenuModel> menuItems;
     ArrayList<OrderModel> orderedItem;
     int orderNumber = 0;
+
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,39 +128,22 @@ public class SmallCanteenActivity extends AppCompatActivity implements SMMenuAda
         btnAddOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences = getSharedPreferences("my_cart", MODE_PRIVATE);
-
-                String data = sharedPreferences.getString("cart_item", null);
-                Gson gson = new Gson();
-
-                OrderModel[] _orderItems = gson.fromJson(data, OrderModel[].class);
 
                 orderedItem = new ArrayList<OrderModel>();
-                if((_orderItems != null))
-                    Collections.addAll(orderedItem, _orderItems);
-
-                /*if((_orderItems != null))
-                {
-                    for(int a = 0; a < _orderItems.length; a++)
-                    {
-                        orderedItem.add(new OrderModel(_orderItems[a].getFoodName(),
-                                _orderItems[a].getFoodPrice(),
-                                _orderItems[a].getFoodImage(),
-                                orderNumber));
-                    }
-                }*/
 
                 orderedItem.add(new OrderModel(menuItems.get(position).getFoodName(),
                         menuItems.get(position).getFoodPrice(),
                         menuItems.get(position).getFoodImage(),
                         orderNumber));
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.remove("cart_item").apply();
-                String json = gson.toJson(orderedItem);
 
-                editor.putString("cart_item", json);
-                editor.apply();
+                //SAVING IN DB
+                OrderModel order = new OrderModel(menuItems.get(position).getFoodName(),
+                        menuItems.get(position).getFoodPrice(),
+                        menuItems.get(position).getFoodImage(),
+                        orderNumber);
+                dbHelper = new DBHelper(SmallCanteenActivity.this);
+                dbHelper.addOrder(order);
 
                 Toast.makeText(SmallCanteenActivity.this, "Added " + menuItems.get(position).getFoodName() + orderNumber + " to Cart", Toast.LENGTH_SHORT).show();
                 alertDialog.dismiss();
